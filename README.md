@@ -7,8 +7,6 @@ Uma ferramenta para arquitetos que consulta a legislação de zoneamento com bas
 Este projeto visa facilitar o trabalho de arquitetos ao consultar as regras de zoneamento de terrenos específicos. Utilizando inteligência artificial, o sistema responde a consultas sobre a legislação de uso do solo de acordo com a localização fornecida (CEP ou outra forma de geolocalização).
 
 ## Tecnologias Usadas
-- **Python 3.x**
-- **Transformers** (para carregamento do modelo LLaMA)
-- **PyTorch** (para manipulação do modelo)
-- **Hugging Face API**
-- **Flask/Django** (se você estiver utilizando algum framework para backend)
+- **Python 3.10.11**
+- **spaCy (python -m spacy download pt_core_news_sm)**
+- **geopandas (pip install geopandas)**
