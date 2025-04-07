@@ -9,4 +9,5 @@ Este projeto visa facilitar o trabalho de arquitetos ao consultar as regras de z
 ## Tecnologias Usadas
 - **Python 3.10.11**
 - **spaCy (python -m spacy download pt_core_news_sm)**
+            **(python -m spacy download pt_core_news_md)**
 - **geopandas (pip install geopandas)**
