@@ -11,3 +11,9 @@ Este projeto visa facilitar o trabalho de arquitetos ao consultar as regras de z
 - **spaCy (python -m spacy download pt_core_news_sm)**
             **(python -m spacy download pt_core_news_md)**
 - **geopandas (pip install geopandas)**
+
+
+## Treinamento
+- **python -m spacy init config config.cfg --lang pt --pipeline ner**
+- **python -m spacy train config.cfg --output ./output --paths.train ./zona_train.spacy --paths.dev ./zona_train.spacy**
+- **python -m spacy train config.cfg --output ./output --gpu-id 0**
