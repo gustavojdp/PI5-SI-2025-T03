@@ -44,12 +44,6 @@ from spacy.tokens import DocBin
 from spacy.util import filter_spans
 import fitz  # PyMuPDF
 import re
-import torch
-
-
-print(torch.cuda.is_available())  # Deve retornar: True
-print(torch.cuda.get_device_name(0))  # Nome da sua GPU
-
 
 # Função para extrair texto do PDF
 def extract_text_from_pdf(pdf_path):
@@ -61,42 +55,40 @@ def extract_text_from_pdf(pdf_path):
 
 # Função para encontrar zonas no texto
 def find_zonas(text):
-    # Exemplo: padrões comuns de zona como ZR, ZC, ZPI, etc.
     pattern = r'\b(ZR|ZC|ZPI|ZEU|ZEMP|ZIS|ZIU|ZOD|ZCOR|ZDE|ZMP|ZP|ZRM)\b'
     matches = [(m.start(), m.end(), "ZONA") for m in re.finditer(pattern, text)]
     return matches
 
-# Função para preparar os dados para o spaCy
-def prepare_training_data(text, entities):
-    nlp = spacy.blank("pt")  # ou "en" se o texto estiver em inglês
+# Função para criar um Doc com entidades
+def create_doc(nlp, text, entities):
     doc = nlp.make_doc(text)
-
-    # Garante que não tenha sobreposição de entidades
     spans = [doc.char_span(start, end, label=label) for start, end, label in entities]
     spans = [span for span in spans if span is not None]
     filtered = filter_spans(spans)
     doc.ents = filtered
+    return doc
 
-    doc_bin = DocBin()
+# Inicializa o idioma
+nlp = spacy.blank("pt")
+doc_bin = DocBin()
+
+# Lista de caminhos de PDFs
+pdf_paths = [
+    "C:/Users/bruno/Downloads/texto de lei pdf.pdf",
+    "C:/Users/bruno/Downloads/PlanoDiretorEstratégico.pdf"  
+]
+
+# Processa cada PDF
+for path in pdf_paths:
+    print(f"Processando: {path}")
+    texto = extract_text_from_pdf(path)
+    entidades = find_zonas(texto)
+    doc = create_doc(nlp, texto, entidades)
     doc_bin.add(doc)
-    return doc_bin
 
-# Caminho do PDF
-pdf_path = "C:/Users/bruno/Downloads/texto de lei pdf.pdf"
-
-# Passo 1: Extrair texto
-texto = extract_text_from_pdf(pdf_path)
-
-# Passo 2: Encontrar entidades
-entidades = find_zonas(texto)
-
-# Passo 3: Preparar dados de treino
-doc_bin = prepare_training_data(texto, entidades)
-
-# Passo 4: Salvar em disco
+# Salva o arquivo final combinado
 doc_bin.to_disk("zona_train.spacy")
-
-print("Dados de treinamento salvos em 'zona_train.spacy'. Agora você pode treinar com spaCy.")
+print("Todos os dados de treinamento salvos em 'zona_train.spacy'")
 
 
 

@@ -36,17 +36,17 @@
 
   ],
   "performance":{
-    "ents_f":0.0,
-    "ents_p":0.0,
-    "ents_r":0.0,
+    "ents_f":1.0,
+    "ents_p":1.0,
+    "ents_r":1.0,
     "ents_per_type":{
       "ZONA":{
-        "p":0.0,
-        "r":0.0,
-        "f":0.0
+        "p":1.0,
+        "r":1.0,
+        "f":1.0
       }
     },
     "tok2vec_loss":0.0,
-    "ner_loss":13271.8338928223
+    "ner_loss":0.0
   }
 }
