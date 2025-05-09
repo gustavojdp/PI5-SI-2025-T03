@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nome_zona": "Zona Mista 3",
+        "codigo_zona": "ZM3"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -47.09,
+              -22.9
+            ],
+            [
+              -47.08,
+              -22.9
+            ],
+            [
+              -47.08,
+              -22.89
+            ],
+            [
+              -47.09,
+              -22.89
+            ],
+            [
+              -47.09,
+              -22.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome_zona": "Zona de Centralidade 2",
+        "codigo_zona": "ZC2"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -47.07,
+              -22.91
+            ],
+            [
+              -47.06,
+              -22.91
+            ],
+            [
+              -47.06,
+              -22.9
+            ],
+            [
+              -47.07,
+              -22.9
+            ],
+            [
+              -47.07,
+              -22.91
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
