@@ -18,5 +18,5 @@ dicionario_zonas = {
     "ZCL": "Zona de Centralidade Local",
     "ZCP": "Zona de Centralidade Principal",
     "ZCD": "Zona de Centralidade Distrital",
-    # Você pode complementar aqui com outras siglas conforme for encontrando no shapefile
+    # Complementar aqui com outras siglas conforme for encontrando no shapefile
 }
