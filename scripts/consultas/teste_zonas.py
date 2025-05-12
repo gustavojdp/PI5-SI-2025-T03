@@ -1,65 +1,61 @@
 import requests
 from pymongo import MongoClient
 from shapely.geometry import shape, Point
+from geopy.geocoders import Nominatim
 import time
+from dicionario_zonas import dicionario_zonas
 
-# Conexão com MongoDB
+# Função para buscar coordenadas a partir de um CEP
+def obter_coordenadas_cep(cep):
+    response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
+    if response.status_code != 200:
+        return None
+    data = response.json()
+    if "erro" in data:
+        return None
+
+    endereco = f"{data['logradouro']}, {data['bairro']}, {data['localidade']}, {data['uf']}"
+    geolocator = Nominatim(user_agent="pi5")
+    time.sleep(1)
+    location = geolocator.geocode(endereco)
+    if location:
+        return location.latitude, location.longitude, endereco
+    return None
+
+# Conecta ao MongoDB
 client = MongoClient('mongodb+srv://pi5:remanejamento123@pi5.lytfpix.mongodb.net/')
 db = client['PI5']
 collection = db['coordenadas']
 
-# Função para obter coordenadas a partir de um CEP
-def cep_para_coordenadas(cep):
-    url = f"https://nominatim.openstreetmap.org/search?postalcode={cep}&country=Brazil&format=json"
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    resposta = requests.get(url, headers=headers)
-
-    if resposta.status_code == 200 and resposta.json():
-        dados = resposta.json()[0]
-        return float(dados['lat']), float(dados['lon'])
-    return None, None
-
 # Entrada do usuário
-cep = input("Digite o CEP (somente números): ").strip()
+cep = input("Digite o CEP (somente números): ")
+coordenadas = obter_coordenadas_cep(cep)
 
-# Buscar endereço via ViaCEP (opcional, apenas exibição)
-via_cep = requests.get(f"https://viacep.com.br/ws/{cep}/json/").json()
-endereco_str = (
-    f"{via_cep.get('logradouro', '')}, {via_cep.get('bairro', '')}, "
-    f"{via_cep.get('localidade', '')}, {via_cep.get('uf', '')}"
-)
+if not coordenadas:
+    print("❌ Não foi possível obter as coordenadas para o CEP informado.")
+else:
+    lat, lon, endereco = coordenadas
+    print(f"\n🔎 Endereço encontrado: {endereco}")
+    print(f"📍 Coordenadas aproximadas: lat={lat}, lon={lon}\n")
 
-# Obter coordenadas
-lat, lon = cep_para_coordenadas(cep)
+    ponto = Point(lon, lat)
+    zona_encontrada = None
 
-if not lat or not lon:
-    print("❌ Não foi possível obter coordenadas para o CEP informado.")
-    exit()
-
-print(f"\n🔎 Endereço encontrado: {endereco_str}")
-print(f"📍 Coordenadas aproximadas: lat={lat}, lon={lon}")
-
-# Verificar se ponto está dentro de algum polígono
-ponto = Point(lon, lat)
-zona_encontrada = None
-
-for doc in collection.find():
-    try:
-        geo = doc.get("geometry")
-        if geo:
-            poligono = shape(geo)
-            if poligono.contains(ponto):
+    for doc in collection.find():
+        geom = doc.get("geometry")
+        if geom:
+            polygon = shape(geom)
+            if polygon.contains(ponto):
                 zona_encontrada = doc
                 break
-    except:
-        continue
 
-# Exibir resultado
-if zona_encontrada:
-    nome = zona_encontrada.get("nome_zona") or zona_encontrada.get("Nome") or "Não especificado"
-    codigo = zona_encontrada.get("codigo_zona") or zona_encontrada.get("Codigo") or "Não especificado"
-    print("\n✅ Zona encontrada:")
-    print(f"Nome: {nome}")
-    print(f"Código: {codigo}")
-else:
-    print("⚠️ Nenhuma zona encontrada para essa localização.")
+    if zona_encontrada:
+        props = zona_encontrada.get("properties", {})
+        codigo = props.get("duos") or props.get("DUOS") or props.get("Duos") or "Não especificado"
+        nome = dicionario_zonas.get(codigo, "Nome não identificado")
+
+        print("✅ Zona encontrada:")
+        print(f"Código: {codigo}")
+        print(f"Nome: {nome}")
+    else:
+        print("❌ Nenhuma zona encontrada para essas coordenadas.")

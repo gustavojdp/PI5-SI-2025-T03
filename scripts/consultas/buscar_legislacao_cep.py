@@ -3,7 +3,12 @@ from pymongo import MongoClient
 from shapely.geometry import shape, Point
 from geopy.geocoders import Nominatim
 import time
+import json
 from dicionario_zonas import dicionario_zonas
+
+# Carrega a legislação resumida
+with open("output/legislacao_resumida_por_zona.json", "r", encoding="utf-8") as f:
+    legislacao_resumida = json.load(f)
 
 # Função para buscar coordenadas a partir de um CEP
 def obter_coordenadas_cep(cep):
@@ -51,11 +56,30 @@ else:
 
     if zona_encontrada:
         props = zona_encontrada.get("properties", {})
-        codigo = props.get("duos", "Não especificado")
+        codigo = props.get("duos") or "Não especificado"
         nome = dicionario_zonas.get(codigo, "Nome não identificado")
 
-        print("✅ Zona encontrada:")
-        print(f"Código: {codigo}")
-        print(f"Nome: {nome}")
+        print(f"✅ Zona encontrada: {nome} ({codigo})\n")
+
+        info = legislacao_resumida.get(codigo)
+        if info:
+            if info.get("uso_permitido"):
+                print("✅ Uso permitido:")
+                for item in info["uso_permitido"]:
+                    print("-", item)
+            if info.get("altura_maxima"):
+                print("\n🏢 Altura máxima:")
+                for item in info["altura_maxima"]:
+                    print("-", item)
+            if info.get("densidade_maxima"):
+                print("\n📐 Densidade máxima:")
+                for item in info["densidade_maxima"]:
+                    print("-", item)
+            if info.get("observacoes"):
+                print("\n📝 Observações:")
+                for item in info["observacoes"]:
+                    print("-", item)
+        else:
+            print("⚠️ Nenhuma legislação resumida encontrada para essa zona.")
     else:
         print("❌ Nenhuma zona encontrada para essas coordenadas.")
