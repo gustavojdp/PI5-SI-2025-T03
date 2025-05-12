@@ -9,9 +9,6 @@ Este documento detalha os scripts do projeto, suas funções e localizações.
 - `importar_zonas_shp.py`  
   Lê arquivos `.shp` da pasta `shapefiles/` e insere os polígonos no banco `PI5.coordenadas`.
 
-- `importar_zonas_geojson.py`  
-  Lê o arquivo `campinas_zoneamento.geojson` e insere no banco `campinas.zonas`, já com `nome_zona` e `codigo_zona`.
-
 ---
 
 ## 📂 scripts/processamento

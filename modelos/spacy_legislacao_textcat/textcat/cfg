@@ -1,0 +1,11 @@
+{
+  "labels":[
+    "altura_maxima",
+    "uso_permitido",
+    "observacoes",
+    "densidade_maxima",
+    "parcelamento"
+  ],
+  "threshold":0.0,
+  "positive_label":null
+}
