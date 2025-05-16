@@ -1,6 +1,8 @@
+from flask import Flask, request, jsonify
 import spacy
 import json
-import sys
+
+app = Flask(__name__)
 
 # Carregar modelo treinado do spaCy
 modelo = spacy.load("modelos/spacy_legislacao_textcat")
@@ -20,7 +22,11 @@ def obter_resposta(pergunta):
                 resposta.append(trecho)
     return resposta
 
-if __name__ == "__main__":
-    pergunta = sys.argv[1]  # Recebe a pergunta do comando
+@app.route('/chat', methods=['POST'])
+def chat():
+    pergunta = request.json.get('pergunta')
     resposta = obter_resposta(pergunta)
-    print(json.dumps(resposta))  # Envia a resposta de volta para o Electron
+    return jsonify(resposta)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

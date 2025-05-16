@@ -1,0 +1,23 @@
+{
+  "name": "pi5-si-2025-t03",
+  "version": "1.0.0",
+  "main": "frontend/src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gustavojdp/PI5-SI-2025-T03.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gustavojdp/PI5-SI-2025-T03/issues"
+  },
+  "homepage": "https://github.com/gustavojdp/PI5-SI-2025-T03#readme",
+  "description": "",
+  "dependencies": {
+    "electron": "^36.2.0"
+  }
+}
