@@ -4,11 +4,24 @@ from shapely.geometry import shape, Point
 from geopy.geocoders import Nominatim
 import time
 import json
+import spacy
 from dicionario_zonas import dicionario_zonas
 
 # Carrega a legislação resumida
 with open("output/legislacao_resumida_por_zona.json", "r", encoding="utf-8") as f:
     legislacao_resumida = json.load(f)
+
+# Carrega modelo spaCy
+nlp = spacy.load("pt_core_news_md")
+
+# Função para resumir texto
+def resumir_texto(texto):
+    doc = nlp(texto)
+    sentencas = list(doc.sents)
+    if len(sentencas) <= 2:
+        return texto
+    else:
+        return " ".join([str(s) for s in sentencas[:2]])
 
 # Função para buscar coordenadas a partir de um CEP
 def obter_coordenadas_cep(cep):
@@ -66,19 +79,19 @@ else:
             if info.get("uso_permitido"):
                 print("✅ Uso permitido:")
                 for item in info["uso_permitido"]:
-                    print("-", item)
+                    print("-", resumir_texto(item))
             if info.get("altura_maxima"):
                 print("\n🏢 Altura máxima:")
                 for item in info["altura_maxima"]:
-                    print("-", item)
+                    print("-", resumir_texto(item))
             if info.get("densidade_maxima"):
                 print("\n📐 Densidade máxima:")
                 for item in info["densidade_maxima"]:
-                    print("-", item)
+                    print("-", resumir_texto(item))
             if info.get("observacoes"):
                 print("\n📝 Observações:")
                 for item in info["observacoes"]:
-                    print("-", item)
+                    print("-", resumir_texto(item))
         else:
             print("⚠️ Nenhuma legislação resumida encontrada para essa zona.")
     else:
