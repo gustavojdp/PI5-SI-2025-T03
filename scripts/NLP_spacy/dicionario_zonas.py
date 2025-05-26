@@ -1,0 +1,22 @@
+dicionario_zonas = {
+    "ZR": "Zona Residencial",
+    "ZM1": "Zona Mista 1",
+    "ZM2": "Zona Mista 2",
+    "ZM3": "Zona Mista 3",
+    "ZC1": "Zona Central 1",
+    "ZC2": "Zona Central 2",
+    "ZC3": "Zona Central 3",
+    "ZAE A": "Zona de Atividades Econômicas A",
+    "ZAE B": "Zona de Atividades Econômicas B",
+    "ZIS": "Zona de Interesse Social",
+    "ZUC": "Zona de Urbanização Controlada",
+    "ZS1": "Zona de Serviços 1",
+    "ZS2": "Zona de Serviços 2",
+    "ZS3": "Zona de Serviços 3",
+    "ZUD": "Zona de Urbanização Dirigida",
+    "ZEIS": "Zona Especial de Interesse Social",
+    "ZCL": "Zona de Centralidade Local",
+    "ZCP": "Zona de Centralidade Principal",
+    "ZCD": "Zona de Centralidade Distrital",
+    # Complementar aqui com outras siglas conforme for encontrando no shapefile
+}

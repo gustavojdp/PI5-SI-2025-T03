@@ -19,13 +19,22 @@ def obter_coordenadas_cep(cep):
     if "erro" in data:
         return None
 
-    endereco = f"{data['logradouro']}, {data['bairro']}, {data['localidade']}, {data['uf']}"
+    # Tentativa com todos os dados
+    endereco = f"{data.get('logradouro', '')}, {data.get('bairro', '')}, {data.get('localidade', '')}, {data.get('uf', '')}"
     geolocator = Nominatim(user_agent="pi5")
     time.sleep(1)
     location = geolocator.geocode(endereco)
+
+    # Fallback com menos dados se falhar
+    if not location:
+        endereco = f"{data.get('localidade', '')}, {data.get('uf', '')}"
+        time.sleep(1)
+        location = geolocator.geocode(endereco)
+
     if location:
         return location.latitude, location.longitude, endereco
     return None
+
 
 # Conecta ao MongoDB
 client = MongoClient('mongodb+srv://pi5:remanejamento123@pi5.lytfpix.mongodb.net/')
