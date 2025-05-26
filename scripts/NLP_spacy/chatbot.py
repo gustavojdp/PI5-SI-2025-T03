@@ -3,8 +3,6 @@ from spacy.language import Language
 from spacy.tokens import Doc
 import json
 
-# --- Registro do custom_summarizer ------------------------------------------------
-
 class CustomSummarizer:
     def __init__(self, nlp, name, max_length=500, preserve_entities=True):
         self.max_length = int(max_length)
@@ -30,8 +28,6 @@ Doc.set_extension("summary", default="")
 )
 def create_summarizer(nlp, name, max_length, preserve_entities):
     return CustomSummarizer(nlp, name, max_length, preserve_entities)
-
-# ----------------------------------------------------------------------------------
 
 # Carregar o modelo treinado
 modelo = spacy.load("modelos/spacy_legislacao_textcat")
