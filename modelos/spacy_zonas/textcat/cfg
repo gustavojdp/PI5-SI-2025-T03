@@ -1,0 +1,27 @@
+{
+  "labels":[
+    "ZR",
+    "ZM1",
+    "ZM2",
+    "ZM3",
+    "ZC1",
+    "ZC2",
+    "ZC3",
+    "ZAE A",
+    "ZAE B",
+    "ZIS",
+    "ZUC",
+    "ZS1",
+    "ZS2",
+    "ZS3",
+    "ZUD",
+    "ZEIS",
+    "ZCL",
+    "ZCP",
+    "ZCD"
+  ],
+  "threshold":0.0,
+  "positive_label":null,
+  "exclusive_classes":true,
+  "architecture":"bow"
+}

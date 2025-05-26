@@ -1,0 +1,51 @@
+{
+  "lang":"pt",
+  "name":"pipeline",
+  "version":"0.0.0",
+  "spacy_version":">=3.8.5,<3.9.0",
+  "description":"",
+  "author":"",
+  "email":"",
+  "url":"",
+  "license":"",
+  "spacy_git_version":"d0c705c",
+  "vectors":{
+    "width":0,
+    "vectors":0,
+    "keys":0,
+    "name":null,
+    "mode":"default"
+  },
+  "labels":{
+    "textcat_multilabel":[
+      "ZM1",
+      "ZAE A",
+      "ZAE B",
+      "ZAE C",
+      "ZR",
+      "ZM2",
+      "ZM4",
+      "ZC2",
+      "ZC4",
+      "ZR-A",
+      "ZR-B",
+      "ZAE-A",
+      "ZAE-C",
+      "ZAE-A-BG",
+      "ZAE-C-BG",
+      "ZM1-A-BG",
+      "ZM1-B-BG",
+      "ZM1-C-BG",
+      "ZAE-B"
+    ]
+  },
+  "pipeline":[
+    "textcat_multilabel"
+  ],
+  "components":[
+    "textcat_multilabel"
+  ],
+  "disabled":[
+
+  ]
+}
