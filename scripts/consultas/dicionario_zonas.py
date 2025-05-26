@@ -6,6 +6,7 @@ dicionario_zonas = {
     "ZC1": "Zona Central 1",
     "ZC2": "Zona Central 2",
     "ZC3": "Zona Central 3",
+    "ZC4": "Zona Central 4",
     "ZAE A": "Zona de Atividades Econômicas A",
     "ZAE B": "Zona de Atividades Econômicas B",
     "ZIS": "Zona de Interesse Social",
