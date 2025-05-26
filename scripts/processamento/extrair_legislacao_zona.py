@@ -36,3 +36,8 @@ with open("zonas_legislacao_extraida_atualizado.json", "w", encoding="utf-8") as
     json.dump(legislacoes_por_zona, f, indent=2, ensure_ascii=False)
 
 print("✅ Extração concluída. Arquivo 'zonas_legislacao_extraida_atualizado.json' gerado.")
+
+zonas_extraidas = set(legislacoes_por_zona.keys())
+zonas_esperadas = set(dicionario_zonas.keys())
+faltando = zonas_esperadas - zonas_extraidas
+print(f"⚠️ Zonas sem legislação extraída: {faltando}")
