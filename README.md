@@ -33,7 +33,6 @@ python scripts/consultas/testeSpacy.py
 |---------------------|-----------------------------------|
 | Python              | 3.10.11                           |
 | RAM                 | 4 GB ou mais                      |
-| Armazenamento       | 1 GB livre                        |
 | MongoDB Atlas       | Acesso a cluster online           |
 | Sistema Operacional | Windows 10+ / Linux / macOS       |
 
