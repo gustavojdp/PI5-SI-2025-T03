@@ -22,7 +22,7 @@ pip install -r requirements.txt
 ### Execute a aplicação principal
 
 ```bash
-python scripts/consultas/testeSpacy.py
+python scripts/NLP_spacy/main.py
 ```
 
 ---
