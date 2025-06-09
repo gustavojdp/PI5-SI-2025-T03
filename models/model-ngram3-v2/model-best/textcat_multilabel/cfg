@@ -1,0 +1,24 @@
+{
+  "labels":[
+    "ZM1",
+    "ZAE A",
+    "ZAE B",
+    "ZAE C",
+    "ZR",
+    "ZM2",
+    "ZM4",
+    "ZC2",
+    "ZC4",
+    "ZR-A",
+    "ZR-B",
+    "ZAE-A",
+    "ZAE-C",
+    "ZAE-A-BG",
+    "ZAE-C-BG",
+    "ZM1-A-BG",
+    "ZM1-B-BG",
+    "ZM1-C-BG",
+    "ZAE-B"
+  ],
+  "threshold":0.4
+}
