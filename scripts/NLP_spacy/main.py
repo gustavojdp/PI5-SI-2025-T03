@@ -5,18 +5,12 @@ from collections import defaultdict
 from pymongo import MongoClient
 from shapely.geometry import shape, Point
 from geopy.geocoders import GoogleV3
+from dicionario_zonas import ZONAS_INFO
 import spacy
 
 GOOGLE_API_KEY = "AIzaSyDM59RDQwNKWBOVqjjKhva8cdHGrwu9gEQ"
 MONGO_URI = 'mongodb+srv://pi5:remanejamento123@pi5.lytfpix.mongodb.net/'
 LEGISLACAO_PATH = "output/documento_completo_limpo.json"
-
-ZONAS_INFO = {
-    "ZR": {"nome": "Zona Residencial", "tipo": "residencial", "hierarquia": 1},
-    "ZM1": {"nome": "Zona Mista 1", "tipo": "mista", "densidade": "baixa", "hierarquia": 2},
-    "ZC4": {"nome": "Zona Central 4", "tipo": "central", "densidade": "alta", "hierarquia": 3},
-    "DEFAULT": {"nome": "Zona não catalogada", "tipo": "indefinida"}
-}
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 model_path = os.path.join(BASE_DIR, "models", "model-ngram3-v2", "model-best")

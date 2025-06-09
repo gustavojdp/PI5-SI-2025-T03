@@ -1,33 +1,24 @@
-dicionario_zonas = {
-    # Zonas Residenciais
+ZONAS_INFO = {
     "ZR": {"nome": "Zona Residencial", "tipo": "residencial", "hierarquia": 1},
-    
-    # Zonas Mistas
     "ZM1": {"nome": "Zona Mista 1", "tipo": "mista", "densidade": "baixa", "hierarquia": 2},
     "ZM2": {"nome": "Zona Mista 2", "tipo": "mista", "densidade": "média", "hierarquia": 2},
     "ZM3": {"nome": "Zona Mista 3", "tipo": "mista", "densidade": "alta", "hierarquia": 2},
-    
-    # Zonas Centrais
-    "ZC1": {"nome": "Zona Central 1", "tipo": "central", "hierarquia": 3},
-    "ZC2": {"nome": "Zona Central 2", "tipo": "central", "hierarquia": 3},
-    "ZC4": {"nome": "Zona Central 4", "tipo": "central", "hierarquia": 3},
-    
-    # Zonas Econômicas
-    "ZAE-A": {"nome": "Zona de Atividades Econômicas A", "tipo": "econômica", "intensidade": "leve"},
-    "ZAE-B": {"nome": "Zona de Atividades Econômicas B", "tipo": "econômica", "intensidade": "pesada"},
-    
-    # Zonas Especiais
-    "ZIS": {"nome": "Zona de Interesse Social", "tipo": "especial", "caracteristica": "social"},
-    "ZEIS": {"nome": "Zona Especial de Interesse Social", "tipo": "especial", "caracteristica": "social"},
-    
-    # Padrão para zonas não mapeadas
-    "DEFAULT": {"nome": "Zona não catalogada", "tipo": "indefinida"}
+    "ZC1": {"nome": "Zona Central 1", "tipo": "central", "densidade": "baixa", "hierarquia": 3},
+    "ZC2": {"nome": "Zona Central 2", "tipo": "central", "densidade": "média", "hierarquia": 3},
+    "ZC3": {"nome": "Zona Central 3", "tipo": "central", "densidade": "alta", "hierarquia": 3},
+    "ZC4": {"nome": "Zona Central 4", "tipo": "central", "densidade": "alta", "hierarquia": 3},
+    "ZAE A": {"nome": "Zona de Atividades Econômicas A", "tipo": "econômica", "hierarquia": 4},
+    "ZAE B": {"nome": "Zona de Atividades Econômicas B", "tipo": "econômica", "hierarquia": 4},
+    "ZIS": {"nome": "Zona de Interesse Social", "tipo": "social", "hierarquia": 5},
+    "ZEIS": {"nome": "Zona Especial de Interesse Social", "tipo": "social", "hierarquia": 5},
+    "ZUC": {"nome": "Zona de Urbanização Controlada", "tipo": "controle urbano", "hierarquia": 4},
+    "ZS1": {"nome": "Zona de Serviços 1", "tipo": "serviço", "hierarquia": 4},
+    "ZS2": {"nome": "Zona de Serviços 2", "tipo": "serviço", "hierarquia": 4},
+    "ZS3": {"nome": "Zona de Serviços 3", "tipo": "serviço", "hierarquia": 4},
+    "ZUD": {"nome": "Zona de Urbanização Dirigida", "tipo": "urbanização", "hierarquia": 4},
+    "ZCL": {"nome": "Zona de Centralidade Local", "tipo": "centralidade", "hierarquia": 3},
+    "ZCP": {"nome": "Zona de Centralidade Principal", "tipo": "centralidade", "hierarquia": 3},
+    "ZCD": {"nome": "Zona de Centralidade Distrital", "tipo": "centralidade", "hierarquia": 3},
+    "INDEFINIDO": {"nome": "Zona não identificada", "tipo": "indefinida", "hierarquia": 99},
+    "DEFAULT": {"nome": "Zona não catalogada", "tipo": "indefinida", "hierarquia": 99}
 }
-
-# Função de acesso seguro
-def get_zona_info(codigo):
-    return dicionario_zonas.get(codigo, dicionario_zonas["DEFAULT"])
-
-# Exemplo de uso:
-# nome_zona = get_zona_info("ZC4")["nome"]
-# tipo_zona = get_zona_info("ZC4")["tipo"]
