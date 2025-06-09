@@ -1,49 +1,62 @@
-import json
 import spacy
-import re
+from spacy.util import minibatch
+from spacy.training import Example
+import random
+import json
+import os
 
-# Carregar o modelo spaCy para segmentação
-nlp = spacy.load("pt_core_news_sm")
+# Caminho do dataset e do modelo
+CAMINHO_JSONL = "dataset_train_categorias.jsonl"
+CAMINHO_MODELO = "modelo_zonas_urbanas"
 
-# Carrega o JSON da legislação (ajuste o caminho conforme seu arquivo)
-with open("output/legislacao_por_zona_completa.json", "r", encoding="utf-8") as f:
-    legislacoes = json.load(f)
+# 1. Cria modelo em branco para português
+nlp = spacy.blank("pt")
 
-# Lista de zonas para classificar (todas as chaves do JSON)
-zonas = list(legislacoes.keys())
+# 2. Adiciona o sentencizer
+nlp.add_pipe("sentencizer")
 
-# Função para detectar zonas presentes no texto de uma sentença
-def detectar_zonas_na_sentenca(sentenca, zonas):
-    sentenca_lower = sentenca.lower()
-    resultado = {}
-    for zona in zonas:
-        # Verifica se o código da zona aparece na sentença (case insensitive)
-        # Exemplo: "ZM1", "ZC4", "ZR-A", etc
-        if zona.lower() in sentenca_lower:
-            resultado[zona] = True
-        else:
-            resultado[zona] = False
-    return resultado
+# 3. Adiciona o textcat_multilabel
+textcat = nlp.add_pipe("textcat_multilabel", last=True)
 
-# Abrir arquivo para escrita do dataset JSONL
-with open("dataset_train.jsonl", "w", encoding="utf-8") as out_file:
-    total_sentencas = 0
-    for zona, topicos in legislacoes.items():
-        for topico, textos in topicos.items():
-            # Junta os textos do tópico para segmentar sentenças
-            texto_completo = " ".join(textos).replace("\n", " ").replace("\r", " ")
-            doc = nlp(texto_completo)
-            for sent in doc.sents:
-                sent_text = sent.text.strip()
-                # Ignora sentenças muito curtas
-                if len(sent_text) < 20:
-                    continue
-                cats = detectar_zonas_na_sentenca(sent_text, zonas)
-                exemplo = {
-                    "text": sent_text,
-                    "cats": cats
-                }
-                out_file.write(json.dumps(exemplo, ensure_ascii=False) + "\n")
-                total_sentencas += 1
+# 4. Lê labels do dataset
+labels = set()
+with open(CAMINHO_JSONL, "r", encoding="utf-8") as f:
+    for line in f:
+        cats = json.loads(line)["cats"]
+        for label in cats:
+            labels.add(label)
 
-print(f"Dataset criado com {total_sentencas} sentenças anotadas.")
+# 5. Adiciona as labels ao textcat
+for label in labels:
+    textcat.add_label(label)
+
+# 6. Carrega os dados de treino
+train_data = []
+with open(CAMINHO_JSONL, "r", encoding="utf-8") as f:
+    for line in f:
+        item = json.loads(line)
+        train_data.append((item["text"], {"cats": item["cats"]}))
+
+# 7. Inicializa o otimizador
+optimizer = nlp.initialize()
+
+# 8. Treinamento
+for i in range(50):  # Número de épocas
+    random.shuffle(train_data)
+    losses = {}
+    batches = minibatch(train_data, size=8)
+    for batch in batches:
+        examples = []
+        for text, ann in batch:
+            doc = nlp.make_doc(text)
+            examples.append(Example.from_dict(doc, ann))
+        nlp.update(examples, sgd=optimizer, losses=losses)
+    print(f"🧠 Época {i+1} - Perda: {losses['textcat_multilabel']:.4f}")
+
+# 9. Salva o modelo no diretório
+if os.path.exists(CAMINHO_MODELO):
+    import shutil
+    shutil.rmtree(CAMINHO_MODELO)
+
+nlp.to_disk(CAMINHO_MODELO)
+print(f"✅ Modelo salvo em: {CAMINHO_MODELO}")

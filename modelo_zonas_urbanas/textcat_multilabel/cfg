@@ -1,0 +1,12 @@
+{
+  "labels":[
+    "recuos",
+    "uso_permitido",
+    "altura_maxima",
+    "densidade",
+    "restricoes",
+    "outros_dispositivos",
+    "parcelamento"
+  ],
+  "threshold":0.5
+}
