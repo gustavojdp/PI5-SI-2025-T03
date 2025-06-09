@@ -1,0 +1,134 @@
+:root {
+  --fundo: #f7f8fa;
+  --fundo-claro: #ffffff;
+  --fundo-bloco: #f0f0f0;
+  --texto: #202123;
+  --texto-fraco: #6b7280;
+  --primario: #10a37f;
+  --primario-hover: #0e8b6a;
+  --erro: #dc2626;
+  --borda: #e5e7eb;
+  --topico: #1e3a8a;
+  --fonte: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--fonte);
+  background: var(--fundo);
+  color: var(--texto);
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.chat-wrapper {
+  background: var(--fundo-claro);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  width: 100%;
+  padding: 32px;
+  transition: all 0.3s ease-in-out;
+}
+
+.chat-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: var(--primario);
+}
+
+.chat-header p {
+  margin: 10px 0 0;
+  color: var(--texto-fraco);
+  font-size: 14px;
+}
+
+.input-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+#cepInput {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button {
+  background-color: var(--primario);
+  border: none;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--primario-hover);
+}
+
+.output-box {
+  background: var(--fundo-bloco);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--borda);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.output-box h2 {
+  margin-top: 0;
+  font-size: 20px;
+  color: var(--primario-hover);
+}
+
+.output-box h3 {
+  margin-top: 24px;
+  font-size: 18px;
+  color: var(--primario-hover);
+}
+
+.output-box h4 {
+  font-size: 16px;
+  color: var(--topico);
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.placeholder {
+  font-style: italic;
+  color: var(--texto-fraco);
+}
+
+.thinking {
+  color: var(--texto-fraco);
+}
+
+.erro {
+  color: var(--erro);
+  font-weight: 600;
+}

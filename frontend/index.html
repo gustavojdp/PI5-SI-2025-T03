@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Zoneamento Campinas</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <h1>🧠 Zoneamento Campinas</h1>
+      <p>Digite um CEP válido para consultar a legislação urbana da região.</p>
+    </div>
+    <div class="chat-box">
+      <form id="cepForm" class="input-box">
+        <input type="text" id="cepInput" placeholder="Ex: 13024001" required>
+        <button type="submit">🔍 Buscar</button>
+      </form>
+      <div id="resultado" class="output-box">
+        <p class="placeholder">Aguardando consulta...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/scripts.js"></script>
+</body>
+</html>

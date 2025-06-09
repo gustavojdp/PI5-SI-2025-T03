@@ -1,3 +1,5 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 import re
 import json
@@ -7,6 +9,9 @@ from shapely.geometry import shape, Point
 from geopy.geocoders import GoogleV3
 from dicionario_zonas import ZONAS_INFO
 import spacy
+
+app = Flask(__name__)
+CORS(app)
 
 GOOGLE_API_KEY = "AIzaSyDM59RDQwNKWBOVqjjKhva8cdHGrwu9gEQ"
 MONGO_URI = 'mongodb+srv://pi5:remanejamento123@pi5.lytfpix.mongodb.net/'
@@ -38,17 +43,16 @@ def extrair_parametros(texto, codigo_zona):
         "APG": r"(Área de Planejamento e Gestão.*?[A-Z]{2,4})",
         "Exceções": r"(exceto para.*?(?:HU|comercial|residencial))"
     }
-    
+
     parametros = []
     for nome, padrao in padroes.items():
         matches = re.finditer(padrao, texto, re.IGNORECASE)
         for match in matches:
             parametros.append(f"{nome}: {match.group(1)}")
-    
-    # Se encontrar parâmetros, retorna eles + texto completo
+
     if parametros:
         return " | ".join(parametros) + f"\n   📄 Texto completo: {texto}"
-    return texto  # Retorna o texto completo sem cortes
+    return texto
 
 def menciona_somente_zona_alvo(sentenca, codigo_zona):
     zonas = [
@@ -106,36 +110,15 @@ def localizar_zona(lat, lon):
     return collection.find_one({"geometry": {"$geoIntersects": {"$geometry": ponto}}})
 
 def formatar_item_legislativo(texto, codigo_zona):
-    # Primeiro: preservar o texto original sem modificações desnecessárias
     texto = texto.strip()
-    
-    # Destacar o código da zona (sem alterar a estrutura)
-    texto = re.sub(
-        rf'\b{codigo_zona}\b', 
-        f'【{codigo_zona}】', 
-        texto,
-        flags=re.IGNORECASE
-    )
-    
-    # Identificar e formatar fórmulas matemáticas primeiro
+    texto = re.sub(rf'\b{codigo_zona}\b', f'【{codigo_zona}】', texto, flags=re.IGNORECASE)
     formulas = re.findall(r'([A-Za-z]{2,}\s*=.+?)(?=[;.]|$)', texto)
     for formula in formulas:
-        texto = texto.replace(
-            formula, 
-            f"\n   🧮 Fórmula: {formula.strip()}"
-        )
-    
-    # Quebras de linha apenas para itens de lista
-    texto = re.sub(
-        r'([IVX]+)\s*-\s*([A-Z])', 
-        r'\n   \1 - \2', 
-        texto
-    )
-    
+        texto = texto.replace(formula, f"\n   🧮 Fórmula: {formula.strip()}")
+    texto = re.sub(r'([IVX]+)\s*-\s*([A-Z])', r'\n   \1 - \2', texto)
     return texto
 
 def processar_formulas(texto):
-    # Identifica e formata melhor as fórmulas matemáticas
     formulas = re.findall(r'([A-Za-z]+\s*[=<>].*?(?:[.;]|$))', texto)
     for formula in formulas:
         texto = texto.replace(formula, f"\n   🧮 Fórmula: {formula.strip()}")
@@ -144,49 +127,44 @@ def processar_formulas(texto):
 def formatar_saida(trechos, codigo_zona):
     saida = []
     for topico, itens in trechos.items():
-        itens_unicos = list(dict.fromkeys(itens))[:5]  # Limitar a 5 itens sem cortar
-        
+        itens_unicos = list(dict.fromkeys(itens))[:5]
         if not itens_unicos:
             continue
-            
         saida.append(f"\n📌 {topico.replace('_', ' ').title()}:")
         for i, item in enumerate(itens_unicos, 1):
             item_formatado = formatar_item_legislativo(item, codigo_zona)
             saida.append(f"  {i}. {item_formatado}")
-    
     if not saida:
         return "⚠️ Nenhum dispositivo legal específico encontrado"
-    
-    return "\n".join([
-        "\nℹ️ LEGENDA: DENS=Densidade | ALT=Altura | CA=Coef.Aproveitamento",
-        *saida
-    ])
+    return "\n".join(["\nℹ️ LEGENDA: DENS=Densidade | ALT=Altura | CA=Coef.Aproveitamento", *saida])
 
-def main():
-    cep = input("Digite o CEP (formato 13000-000): ").strip()
-    try:
-        coordenadas = obter_coordenadas_cep(cep)
-        if not coordenadas:
-            print("\n❌ Geolocalização não encontrada para o CEP")
-            return
-        lat, lon, endereco = coordenadas
-        print(f"\n🔎 Endereço encontrado: {endereco.split(',')[0]}")
-        print(f"📍 Coordenadas: {lat:.6f}, {lon:.6f}")
-        zona = localizar_zona(lat, lon)
-        if not zona:
-            print("\n❌ Zona urbana não identificada")
-            return
-        codigo = zona.get("properties", {}).get("duos", "INDEFINIDO")
-        zona_info = get_zona_info(codigo)
-        print(f"\n✅ Zona Identificada: {zona_info['nome']} ({codigo})")
-        print(f"📋 Tipo: {zona_info['tipo'].capitalize()}")
-        if 'densidade' in zona_info:
-            print(f"📊 Densidade: {zona_info['densidade'].capitalize()}")
-        trechos = consultar_legislacao_por_zona(codigo)
-        print("\n📜 Dispositivos Legais Relevantes:")
-        print(formatar_saida(trechos, codigo))
-    except Exception as e:
-        print(f"\n⚠️ Erro: {str(e)}")
+@app.route("/buscar", methods=["GET"])
+def buscar():
+    cep = request.args.get("cep")
+    if not cep:
+        return jsonify({"erro": "CEP não fornecido"}), 400
+
+    coordenadas = obter_coordenadas_cep(cep)
+    if not coordenadas:
+        return jsonify({"erro": "Geolocalização não encontrada"}), 404
+
+    lat, lon, endereco = coordenadas
+    zona = localizar_zona(lat, lon)
+    if not zona:
+        return jsonify({"erro": "Zona urbana não identificada"}), 404
+
+    codigo = zona.get("properties", {}).get("duos", "INDEFINIDO")
+    zona_info = get_zona_info(codigo)
+    trechos = consultar_legislacao_por_zona(codigo)
+
+    return jsonify({
+        "endereco": endereco,
+        "zona": {
+            "codigo": codigo,
+            "nome": zona_info.get("nome", "Não identificado")
+        },
+        "legislacao": trechos
+    })
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
